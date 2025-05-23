@@ -1,0 +1,16 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+  /* ---------------------------------------------------------------
+    *  OPEN ACCESS  ─ only for the collection that backs your app  */
+   match /datasets/{doc=**} {
+     allow read, write: if true;   //  <-- no auth required
+   }
+   /* --------------------------------------------------------------- */
+
+    /* everything else remains protected by auth */
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
